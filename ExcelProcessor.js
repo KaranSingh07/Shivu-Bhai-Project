@@ -1,3 +1,11 @@
+/**
+ * @author Karan Singh Solanki
+ * Design and Developed by Karan Singh Solanki.
+ * @copyright 2022 Karan Singh Solanki, inc. All rights reserved.
+ * @email karansinghsolanki7410@gmail.com for any queries.
+ * @warning Developed to fulfill specific requirements. Not to be used commercially.
+ */
+
 import xlsx from 'xlsx';
 import path from 'path';
 import fs from 'fs';
