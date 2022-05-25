@@ -1,4 +1,6 @@
 import xlsx from 'xlsx';
+import path from 'path';
+import fs from 'fs';
 import { ERRORS } from './constants.js';
 
 export class ExcelProcessor {
@@ -50,7 +52,7 @@ export class ExcelProcessor {
 
 		searchTerm = searchTerm.toLowerCase();
 
-		let searchTerms = [SPACE + searchTerm + SPACE];
+		let searchTerms = [SPACE + searchTerm.trim() + SPACE];
 
 		let result = false;
 		this._fields.forEach((field) => {
@@ -67,5 +69,55 @@ export class ExcelProcessor {
 		});
 
 		return result;
+	}
+
+	generateExcelFiles(data, outputFolder) {
+		const columns = Object.keys(data[Object.keys(data)[0]][0]);
+
+		if (fs.existsSync(outputFolder)) {
+			this.removeDir(outputFolder);
+		}
+		fs.mkdir(outputFolder, () => {});
+
+		Object.keys(data).forEach((village) => {
+			let rowsForOneVillage = data[village].map((cell) => {
+				let row = [];
+				columns.forEach((column) => {
+					row.push(cell[column]);
+				});
+				return row;
+			});
+
+			// try {
+			const workBook = xlsx.utils.book_new();
+			const workSheetData = [columns, ...rowsForOneVillage];
+			const workSheet = xlsx.utils.aoa_to_sheet(workSheetData);
+			xlsx.utils.book_append_sheet(workBook, workSheet, village);
+			xlsx.writeFile(
+				workBook,
+				path.resolve(outputFolder + '/' + village + '.xlsx')
+			);
+		});
+	}
+
+	removeDir(path) {
+		if (fs.existsSync(path)) {
+			const files = fs.readdirSync(path);
+
+			if (files.length > 0) {
+				files.forEach(function (filename) {
+					if (fs.statSync(path + '/' + filename).isDirectory()) {
+						removeDir(path + '/' + filename);
+					} else {
+						fs.unlinkSync(path + '/' + filename);
+					}
+				});
+				fs.rmdirSync(path);
+			} else {
+				fs.rmdirSync(path);
+			}
+		} else {
+			console.log('Directory path not found.');
+		}
 	}
 }

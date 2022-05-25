@@ -14,5 +14,5 @@ try {
 } catch {}
 
 if (results) {
-	console.log(results);
+	excelProcessor.generateExcelFiles(results, './results');
 }
