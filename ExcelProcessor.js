@@ -44,8 +44,28 @@ export class ExcelProcessor {
 	}
 
 	_matchFound(row, searchTerm) {
-		return this._fields.some((field) =>
-			row[field].toLowerCase().includes(searchTerm.toLowerCase())
-		);
+		const SPACE = ' ';
+		const COMMA = ',';
+		const HYPHEN = '-';
+
+		searchTerm = searchTerm.toLowerCase();
+
+		let searchTerms = [SPACE + searchTerm + SPACE];
+
+		let result = false;
+		this._fields.forEach((field) => {
+			let value = row[field]
+				.toLowerCase()
+				.replace(COMMA, SPACE)
+				.replace(HYPHEN, SPACE);
+			+SPACE;
+			searchTerms.forEach((searchTerm) => {
+				if (value.includes(searchTerm)) {
+					result = true;
+				}
+			});
+		});
+
+		return result;
 	}
 }
