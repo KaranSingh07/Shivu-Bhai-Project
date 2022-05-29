@@ -1,7 +1,6 @@
 /**
  * @author Karan Singh Solanki
  * Design and Developed by Karan Singh Solanki.
- * @copyright 2022 Karan Singh Solanki, inc. All rights reserved.
  * @email karansinghsolanki7410@gmail.com for any queries.
  * @warning Developed to fulfill specific requirements. Not to be used commercially.
  */
@@ -18,9 +17,7 @@ import promptSync from 'prompt-sync';
 
 var excelProcessor = new ExcelProcessor();
 
-let excelPath = EXCEL.PATH;
-let sheetName = EXCEL.SHEET_NAME;
-let villageList = VILLAGE_LIST;
+let excelPath, sheetName, villageList;
 
 getInputs();
 let results;
