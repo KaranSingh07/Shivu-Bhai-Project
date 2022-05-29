@@ -10,7 +10,7 @@ export const EXCEL = {
 		PATH: 'test.xlsx',
 		SHEET_NAME: 'Sheet1',
 	},
-	FIELDS_INCLUDED_IN_SEARCH = ['Address'],
+	FIELD_INCLUDED_IN_SEARCH = ['Address'],
 	VILLAGE_LIST = 'village-list.txt',
 	ERRORS = {
 		FILE_NOT_FOUND_ERROR: `ERROR reading file at path specified. Make sure it exists and it have the correct extension: arg0`,

@@ -12,7 +12,7 @@ import fs from 'fs';
 import { ERRORS } from './constants.js';
 
 export class ExcelProcessor {
-	_fields = [];
+	// _fields = [];
 
 	getWorksheetRows(path, sheetName) {
 		let workBook;
@@ -35,12 +35,12 @@ export class ExcelProcessor {
 	 * @param fields array of strings to be used to find the search terms
 	 * @param searchTerms array of strings to be searched. These will work as keys for the map
 	 */
-	getRowsBySearchTerms(rows, fields, searchTerms) {
-		this._fields = fields;
+	getRowsBySearchTerms(rows, field, searchTerms) {
+		//this._fields = fields;
 		let rowsBySearchTerms = {};
 		rows.forEach((row) => {
 			searchTerms.forEach((searchTerm) => {
-				if (this._matchFound(row, searchTerm)) {
+				if (this._matchFound(row[field], searchTerm)) {
 					if (rowsBySearchTerms.hasOwnProperty(searchTerm)) {
 						rowsBySearchTerms[searchTerm].push(row);
 					} else {
@@ -58,25 +58,19 @@ export class ExcelProcessor {
 		const COMMA = ',';
 		const HYPHEN = '-';
 
-		searchTerm = searchTerm.toLowerCase();
+		searchTerm = searchTerm.toLowerCase().trim();
+		row = row.toLowerCase().trim().replaceAll(HYPHEN, SPACE);
 
-		let searchTerms = [SPACE + searchTerm.trim() + SPACE];
+		let searchTerms = [
+			SPACE + searchTerm + SPACE,
+			SPACE + searchTerm + COMMA,
+			COMMA + searchTerm + SPACE,
+			COMMA + searchTerm + COMMA,
+		];
 
-		let result = false;
-		this._fields.forEach((field) => {
-			let value = row[field]
-				.toLowerCase()
-				.replace(COMMA, SPACE)
-				.replace(HYPHEN, SPACE);
-			+SPACE;
-			searchTerms.forEach((searchTerm) => {
-				if (value.includes(searchTerm)) {
-					result = true;
-				}
-			});
+		return searchTerms.some((searchTerm) => {
+			return row.includes(searchTerm);
 		});
-
-		return result;
 	}
 
 	generateExcelFiles(data, outputFolder) {
