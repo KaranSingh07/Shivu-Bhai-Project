@@ -21,7 +21,6 @@ export const EXCEL = {
 *
 * @author Karan Singh Solanki
 * Design and Developed by Karan Singh Solanki.
-* @copyright 2022 Karan Singh Solanki, inc. All rights reserved.
 * @email karansinghsolanki7410@gmail.com for any queries.
 * @warning Developed to fulfill specific requirements and can be used as per the instructions below.
 *
