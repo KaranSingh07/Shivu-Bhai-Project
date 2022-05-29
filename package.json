@@ -9,6 +9,7 @@
 	"author": "Karan Singh Solanki",
 	"license": "ISC",
 	"dependencies": {
+		"cli-progress": "^3.11.1",
 		"path": "^0.12.7",
 		"prompt": "^1.3.0",
 		"prompt-sync": "^4.2.0",

@@ -17,16 +17,18 @@ import promptSync from 'prompt-sync';
 
 var excelProcessor = new ExcelProcessor();
 
-let excelPath, sheetName, villageList;
+let excelPath, sheetName, villageListPath;
 
 getInputs();
 let results;
 
 try {
+	let rows = excelProcessor.getWorksheetRows(excelPath, sheetName);
+	let villageList = getTextfileLines(villageListPath);
 	results = excelProcessor.getRowsBySearchTerms(
-		excelProcessor.getWorksheetRows(excelPath, sheetName),
+		rows,
 		FIELD_INCLUDED_IN_SEARCH,
-		getTextfileLines(villageList)
+		villageList
 	);
 } catch {
 	console.log(
@@ -35,7 +37,6 @@ try {
 }
 
 if (results) {
-	console.log(results);
 	excelProcessor.generateExcelFiles(results, './results');
 }
 
@@ -46,5 +47,5 @@ function getInputs() {
 	console.log('Please provide following details:');
 	excelPath = prompt('Excel file name: ');
 	sheetName = prompt('Sheet name: ');
-	villageList = prompt('Village list file name: ');
+	villageListPath = prompt('Village list file name: ');
 }

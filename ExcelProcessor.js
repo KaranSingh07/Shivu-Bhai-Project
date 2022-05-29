@@ -9,22 +9,37 @@ import xlsx from 'xlsx';
 import path from 'path';
 import fs from 'fs';
 import { ERRORS } from './constants.js';
+import cliProgress from 'cli-progress';
 
 export class ExcelProcessor {
 	// _fields = [];
 
 	getWorksheetRows(path, sheetName) {
 		let workBook;
+		console.log('Reading excel file');
+		const bar = new cliProgress.SingleBar(
+			{},
+			cliProgress.Presets.shades_classic
+		);
+		bar.start(100, 0);
+
 		try {
 			workBook = xlsx.readFile(path);
+			bar.stop();
 		} catch {
+			bar.stop();
 			console.log(ERRORS.FILE_NOT_FOUND_ERROR.replace('arg0', path));
 			return;
 		}
 
 		const workSheet = workBook.Sheets[sheetName];
-		if (workSheet) return xlsx.utils.sheet_to_json(workSheet);
+		if (workSheet) {
+			bar.update(100);
+			bar.stop();
+			return xlsx.utils.sheet_to_json(workSheet);
+		}
 
+		bar.stop();
 		console.log(ERRORS.SHEET_NOT_FOUND_ERROR.replace('arg0', sheetName));
 	}
 
@@ -38,13 +53,28 @@ export class ExcelProcessor {
 		//this._fields = fields;
 		let rowsBySearchTerms = {};
 		const NO_MATCH = 'Z_NO_MATCH';
+		const ROW_COUNT = rows.length;
 
 		let rowsWithNoMatch = [];
 
+		console.log('Processing excel along with villages...');
+
+		const bar = new cliProgress.SingleBar(
+			{},
+			cliProgress.Presets.shades_classic
+		);
+		bar.start(ROW_COUNT, 0);
+
+		let currentRow = 1;
 		rows.forEach((row) => {
 			let matchFound = false;
 			searchTerms.forEach((searchTerm) => {
-				if (this._matchFound(row[field], searchTerm)) {
+				if (
+					this._matchFound(
+						row[field].toString(),
+						searchTerm.toString()
+					)
+				) {
 					matchFound = true;
 					if (rowsBySearchTerms.hasOwnProperty(searchTerm)) {
 						rowsBySearchTerms[searchTerm].push(row);
@@ -54,11 +84,14 @@ export class ExcelProcessor {
 				}
 			});
 			if (!matchFound) rowsWithNoMatch.push(row);
+			// bar.update(Math.round((currentRow * 100) / ROW_COUNT));
+			bar.update(currentRow);
+			currentRow++;
 		});
 
 		rowsBySearchTerms[NO_MATCH] = [...rowsWithNoMatch];
 
-		console.log(rowsBySearchTerms);
+		bar.stop();
 		return rowsBySearchTerms;
 	}
 
@@ -89,6 +122,14 @@ export class ExcelProcessor {
 	}
 
 	generateExcelFiles(data, outputFolder) {
+		console.log('Generating results...');
+		const villageCount = Object.keys(data).length;
+		const bar = new cliProgress.SingleBar(
+			{},
+			cliProgress.Presets.shades_classic
+		);
+		bar.start(villageCount, 0);
+
 		const columns = Object.keys(data[Object.keys(data)[0]][0]);
 
 		if (fs.existsSync(outputFolder)) {
@@ -96,6 +137,7 @@ export class ExcelProcessor {
 		}
 		fs.mkdir(outputFolder, () => {});
 
+		let count = 1;
 		Object.keys(data).forEach((village) => {
 			let rowsForOneVillage = data[village].map((cell) => {
 				let row = [];
@@ -105,7 +147,6 @@ export class ExcelProcessor {
 				return row;
 			});
 
-			// try {
 			const workBook = xlsx.utils.book_new();
 			const workSheetData = [columns, ...rowsForOneVillage];
 			const workSheet = xlsx.utils.aoa_to_sheet(workSheetData);
@@ -114,7 +155,10 @@ export class ExcelProcessor {
 				workBook,
 				path.resolve(outputFolder + '/' + village + '.xlsx')
 			);
+			bar.update(Math.round(count));
+			count++;
 		});
+		bar.stop();
 	}
 
 	removeDir(path) {

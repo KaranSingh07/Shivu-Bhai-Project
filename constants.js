@@ -13,7 +13,7 @@ export const EXCEL = {
 	VILLAGE_LIST = 'village-list.txt',
 	ERRORS = {
 		FILE_NOT_FOUND_ERROR: `ERROR reading file at path specified. Make sure it exists and it have the correct extension: arg0`,
-		SHEET_NOT_FOUND_ERROR: `ERROR reading sheet in the excel file specified. Make sure it exists: arg0`,
+		SHEET_NOT_FOUND_ERROR: `ERROR reading sheet in the excel file specified. Make sure it exists and not empty: arg0`,
 	},
 	INTRO = `
 * * * * * * * * * * *
