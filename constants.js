@@ -9,7 +9,7 @@ export const EXCEL = {
 		PATH: 'test.xlsx',
 		SHEET_NAME: 'Sheet1',
 	},
-	FIELD_INCLUDED_IN_SEARCH = ['Address'],
+	FIELD_INCLUDED_IN_SEARCH = 'Address',
 	VILLAGE_LIST = 'village-list.txt',
 	ERRORS = {
 		FILE_NOT_FOUND_ERROR: `ERROR reading file at path specified. Make sure it exists and it have the correct extension: arg0`,
@@ -36,7 +36,8 @@ export const EXCEL = {
 * 	  b. Sheet to be used. For example: "Sheet1". It should exactly match the filename.
 *	  c. Village list (including extension). For example: "village-list.txt". It should have village names one on each line. Ignore the upper/lower case, we will handle it.
 * 
-* 4. Hit enter and we will process the data for you. There will be a results folder created with your excel files per village.
+* 4. Make sure there are no open excel files. If so, close them first.
+* 5. Hit enter and we will process the data for you. There will be a results folder created with your excel files per village.
 *	 We will create one excel file for each village. Name of that file will be the village name itself. 
 *	 One file will also be there containing the data that doesn't match with any of the village name.
 *	 We named this file 'Z_NO_MATCH' so that you can find it easily in the end.

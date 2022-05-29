@@ -39,22 +39,26 @@ export class ExcelProcessor {
 		let rowsBySearchTerms = {};
 		const NO_MATCH = 'Z_NO_MATCH';
 
-		rowsBySearchTerms[NO_MATCH] = [];
+		let rowsWithNoMatch = [];
 
 		rows.forEach((row) => {
+			let matchFound = false;
 			searchTerms.forEach((searchTerm) => {
 				if (this._matchFound(row[field], searchTerm)) {
+					matchFound = true;
 					if (rowsBySearchTerms.hasOwnProperty(searchTerm)) {
 						rowsBySearchTerms[searchTerm].push(row);
 					} else {
 						rowsBySearchTerms[searchTerm] = [row];
 					}
-				} else {
-					rowsBySearchTerms[NO_MATCH].push(row);
 				}
 			});
+			if (!matchFound) rowsWithNoMatch.push(row);
 		});
 
+		rowsBySearchTerms[NO_MATCH] = [...rowsWithNoMatch];
+
+		console.log(rowsBySearchTerms);
 		return rowsBySearchTerms;
 	}
 
@@ -62,9 +66,15 @@ export class ExcelProcessor {
 		const SPACE = ' ';
 		const COMMA = ',';
 		const HYPHEN = '-';
+		const PERIOD = '.';
 
 		searchTerm = searchTerm.toLowerCase().trim();
-		row = row.toLowerCase().trim().replaceAll(HYPHEN, SPACE);
+		row =
+			row
+				.toLowerCase()
+				.trim()
+				.replaceAll(HYPHEN, SPACE)
+				.replaceAll(PERIOD, SPACE) + SPACE;
 
 		let searchTerms = [
 			SPACE + searchTerm + SPACE,

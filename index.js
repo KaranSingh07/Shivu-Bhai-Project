@@ -28,9 +28,14 @@ try {
 		FIELD_INCLUDED_IN_SEARCH,
 		getTextfileLines(villageList)
 	);
-} catch {}
+} catch {
+	console.log(
+		'Make sure there are no open excel files. If so, close them first'
+	);
+}
 
 if (results) {
+	console.log(results);
 	excelProcessor.generateExcelFiles(results, './results');
 }
 
@@ -38,7 +43,8 @@ function getInputs() {
 	console.log(INTRO);
 	const prompt = promptSync({ sigint: true });
 
-	excelPath = prompt('Name of the excel file: ');
-	sheetName = prompt('Name of the sheet of the excel file: ');
-	villageList = prompt('Name of the village list file: ');
+	console.log('Please provide following details:');
+	excelPath = prompt('Excel file name: ');
+	sheetName = prompt('Sheet name: ');
+	villageList = prompt('Village list file name: ');
 }
