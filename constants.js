@@ -26,7 +26,7 @@ export const EXCEL = {
 *
 *
 * Instructions:
-* ----------------
+* * * * * * * * * * *
 *
 * 1. Create a new folder and place this application into it.
 * 2. Place your excel file and village list file also in the folder.
@@ -41,7 +41,5 @@ export const EXCEL = {
 *	 We will create one excel file for each village. Name of that file will be the village name itself. 
 *	 One file will also be there containing the data that doesn't match with any of the village name.
 *	 We named this file 'Z_NO_MATCH' so that you can find it easily in the end.
-*
-* ----------------
 *
 * * * * * * * * * * *`;
