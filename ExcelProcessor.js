@@ -38,6 +38,10 @@ export class ExcelProcessor {
 	getRowsBySearchTerms(rows, field, searchTerms) {
 		//this._fields = fields;
 		let rowsBySearchTerms = {};
+		const NO_MATCH = 'Z_NO_MATCH';
+
+		rowsBySearchTerms[NO_MATCH] = [];
+
 		rows.forEach((row) => {
 			searchTerms.forEach((searchTerm) => {
 				if (this._matchFound(row[field], searchTerm)) {
@@ -46,6 +50,8 @@ export class ExcelProcessor {
 					} else {
 						rowsBySearchTerms[searchTerm] = [row];
 					}
+				} else {
+					rowsBySearchTerms[NO_MATCH].push(row);
 				}
 			});
 		});
